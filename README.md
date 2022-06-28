@@ -13,11 +13,11 @@ Open the command line (or Terminal [Ctrl+Alt+t in Linux])
 
 To download necessary libraries copy and put into the command line the next command:
 
-> pip install numpy pandas datetime scipy sklearn colorama datetime math 
+> pip install numpy pandas datetime scipy sklearn colorama sklearn 
 
 or 
 
-> python pip install numpy pandas datetime scipy sklearn colorama datetime math
+> python pip install numpy pandas datetime scipy sklearn colorama sklearn
 
 Download the Biometry.py:
 
