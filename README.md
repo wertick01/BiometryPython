@@ -20,7 +20,7 @@ or
 > python pip install numpy pandas datetime scipy sklearn colorama sklearn
 
 
-Download **git** (click on the link https://github.com/git-for-windows/git/releases/latest)
+Download **git** (click on the link [https://github.com/git-for-windows/git/releases/latest](https://github.com/git-for-windows/git/releases/download/v2.37.0.windows.1/Git-2.37.0-32-bit.exe))
 
 
 Download the Biometry.py:
