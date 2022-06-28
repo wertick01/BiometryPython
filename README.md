@@ -19,10 +19,19 @@ or
 
 > python pip install numpy pandas datetime scipy sklearn colorama datetime math
 
+Download the Biometry.py:
+
+> wget https://github.com/wertick01/BiometryPython
+
+or
+
+> git clone https://github.com/wertick01/BiometryPython.git
+
+or download .zip archive and unzip it
 
 Then write to the command line:
 
-> python C:\path\to\Biometry.py 
+> python C:\PATH\TO\BiometryPython\Biometry.py 
 
 or
 
