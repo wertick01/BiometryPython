@@ -19,15 +19,16 @@ or
 
 > python pip install numpy pandas datetime scipy sklearn colorama sklearn
 
+
+Download **git** (click on the link https://github.com/git-for-windows/git/releases/latest)
+
+
 Download the Biometry.py:
-
-> wget https://github.com/wertick01/BiometryPython
-
-or
 
 > git clone https://github.com/wertick01/BiometryPython.git
 
 or download .zip archive and unzip it
+
 
 Then write to the command line:
 
@@ -36,5 +37,6 @@ Then write to the command line:
 or
 
 > python3 C:\path\to\Biometry.py
+
 
 After running the script, an instruction will appear. Follow it.
