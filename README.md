@@ -36,7 +36,7 @@ Then write to the command line:
 
 or
 
-> python3 C:\path\to\Biometry.py
+> python3 C:\PATH\TO\Biometry.py
 
 
 After running the script, an instruction will appear. Follow it.
