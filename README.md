@@ -5,10 +5,10 @@ I wrote this script from a fool, so it's full of shit, but it works
 Download data in **.csv** format
 
 
-Download and install **python3** 
+Download and install **python3** (click on the link https://www.python.org/ftp/python/3.10.5/Python-3.10.5.tar.xz)
 
 
-Download and install **git** (click on the link [https://github.com/git-for-windows/git/releases/latest](https://github.com/git-for-windows/git/releases/download/v2.37.0.windows.1/Git-2.37.0-32-bit.exe))
+Download and install **git** (https://www.python.org/downloads/)
 
 
 Download and install **Biometry.py**:
