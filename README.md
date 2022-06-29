@@ -8,7 +8,7 @@ Download data in **.csv** format
 Download and install **python3** (https://www.python.org/downloads/)
 
 
-Download and install **git** (https://www.python.org/downloads/)
+Download and install **git** (https://git-scm.com/downloads)
 
 
 Download and install **Biometry.py**:
