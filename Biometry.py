@@ -1,12 +1,8 @@
 import os
-os.system('pip install numpy pandas datetime scipy sklearn colorama sklearn')
-import numpy as np
+os.system('pip install numpy pandas datetime scipy sklearn colorama sklearn pingouin')
 import pandas as pd
-import math
-import datetime
 import scipy
 from scipy import stats
-import sklearn
 from colorama import init, Fore, Back, Style
 
 init()
@@ -50,7 +46,7 @@ finaly = pd.DataFrame(columns = [str(i) for i in range(1, 38)])
 print('Файл должен быть скачан в формате .csv')
 print(r'Введите путь к файлу (в формате C:\user\...\file.csv)')
 path = input(r"Путь: ")
-data = pd.read_csv(path, sep = ';')
+data = pd.read_excel(path)
 df = pd.DataFrame(columns = ['Height', 'Weight'])
 df.loc['var'] = data[['Height', 'Weight']].var()
 df.loc['mean'] = data[['Height', 'Weight']].mean()
@@ -59,14 +55,14 @@ df.loc['quantile_25'] = data[['Height', 'Weight']].quantile(0.25)
 df.loc['quantile_75'] = data[['Height', 'Weight']].quantile(0.75)
 print(r'Введите путь к директории, в которую сохранить данные (в формате C:\user\...\directory\).')
 final = input(r'Путь: ')
-dir_ = path.split("\\")[-1].split('_')[0]
+dir_ = "/" + path.split("/")[-1].split('_')[0]
 mkdir = final + dir_
 print(mkdir)
 os.mkdir(mkdir)
-mkdir += '/'
+#mkdir += '/'
 name = '_result_2_to_11.csv'
 print('Running', mkdir+dir_+name)
-df.to_csv(mkdir+name)
+df.to_csv(mkdir+dir_+name)
 
 finaly.loc[0, '1'] = 1
 finaly.loc[0, '2'] = round(df.loc['var', 'Height'], 2)
@@ -101,6 +97,8 @@ dat[dat['Height'] < lower['Height']] = None
 dat[dat['Weight'] > upper['Weight']] = None
 dat[dat['Weight'] < lower['Weight']] = None
 dat['BMI'] = dat['Weight'] / (dat['Height']*0.01)**2
+last = dat[dat["Subsample"] == 1]
+last = last[["BMI", "LDDD", "Physical activity"]]
 q25_bmi = dat[['BMI']].quantile(0.25)
 q75_bmi = dat[['BMI']].quantile(0.75)
 IQR_bmi = q75_bmi - q25_bmi
@@ -120,7 +118,7 @@ rs_res[['Height']] = rs_sk[['Height']]
 rs_res[['BMI']] = rs[['BMI']]
 
 name_2 = '_13_to_18.csv'
-rs_res.to_csv(mkdir+name_2)
+rs_res.to_csv(mkdir+dir_+name_2)
 
 finaly['12'] = 1
 finaly['13'] = round(rs_res.loc['var', 'Height'], 2)
@@ -141,7 +139,7 @@ data_j = data_j.rename(columns = {
 drt = pd.DataFrame(columns = ['Spearman'])
 drt.loc['22'] = round(stats.spearmanr(data_j.PA, data_j.MDD)[0], 2)
 name_2_1 = '_22.csv'
-drt.to_csv(mkdir+name_2_1)
+drt.to_csv(mkdir+dir_+name_2_1)
 
 finaly['22'] = drt.loc['22', 'Spearman']
 
@@ -157,7 +155,7 @@ dt_1 = pd.DataFrame(columns = ['result'])
 dt_1.loc['correllation'] = corr
 dt_1.loc['p-value'] = pvalue
 name_3 = '_19_to_20.csv'
-dt_1.to_csv(mkdir+name_3)
+dt_1.to_csv(mkdir+dir_+name_3)
 
 finaly['19'] = round(dt_1.loc['correllation', 'result'], 2)
 finaly['20'] = round(dt_1.loc['p-value', 'result'], 2)
@@ -185,7 +183,7 @@ g.loc['regr'] = skm.coef_
 g.loc['det_coeff'] = 1 - (1-skm.score(np_age, np_bmi))*(len(np_bmi)-1)/(len(np_bmi)-np_age.shape[1]-1)
 g.loc['p_value'] = p_value
 name__ = '_23_to_26.csv'
-g.to_csv(mkdir+name__)
+g.to_csv(mkdir+dir_+name__)
 
 finaly['23'] = round(g.loc['regr', 'res'], 2)
 finaly['24'] = round(g.loc['free', 'res'], 2)
@@ -204,7 +202,7 @@ dtt.loc['p_value_27'] = round(float(scipy.stats.ttest_ind(male_bmi, female_bmi, 
 dtt.loc['p_value_28'] = round(float(scipy.stats.ttest_ind(male_bfm, female_bfm, nan_policy='omit', equal_var=False).pvalue[0]), 3)
 
 name_5 = '_27_to_28.csv'
-dtt.to_csv(mkdir+name_5)
+dtt.to_csv(mkdir+dir_+name_5)
 
 finaly['27'] = dtt.loc['p_value_27', 'res']
 finaly['28'] = dtt.loc['p_value_28', 'res']
@@ -282,13 +280,11 @@ da.loc['p_value_2021_№30'] = p_2021
 da.loc['MaxDegrDisk_№31'] = p_MDD
 
 name_6 = '_29_to_31.csv'
-da.to_csv(mkdir+name_6)
+da.to_csv(mkdir+dir_+name_6)
 
 finaly['29'] = round(da.loc['p_value_2010_№29', 'p_value'], 3)
 finaly['30'] = round(da.loc['p_value_2021_№30', 'p_value'], 3)
 finaly['31'] = round(da.loc['MaxDegrDisk_№31', 'p_value'], 3)
-
-print(da.loc['p_value_2010_№29', 'p_value'])
 
 from sklearn import preprocessing
 dct = {'Low': 1, 'Moderate': 2, 'High': 3}
@@ -306,7 +302,7 @@ data_2 = pd.DataFrame(columns = ['result'])
 data_2.loc['32'] = pa_1[1]
 data_2.loc['33'] = mdd_1[1]
 name_7 = '_32_to_33.csv'
-data_2.to_csv(mkdir+name_7)
+data_2.to_csv(mkdir+dir_+name_7)
 
 finaly['32'] = round(data_2.loc['32', 'result'], 3)
 finaly['33'] = round(data_2.loc['33', 'result'], 3)
@@ -315,15 +311,13 @@ import pandas as pd
 import pingouin as pg
 
 final = pd.DataFrame(columns = ['result'])
-last = dat[dat["Subsample"] == 1]
-last = last [["BMI", "LDDD", "Physical activity"]]
 last = last.rename(columns={"Physical activity": "PA"})
 anv = pg.anova(dv='BMI', between=['LDDD', 'PA'], data=last, detailed=True)
 final.loc['34'] = round(anv[anv["Source"] == "LDDD"]["p-unc"].values[0], 3)
 final.loc['35'] = round(anv[anv["Source"] == "PA"]["p-unc"].values[0], 3)
 final.loc['36'] = 1
 name_8 = '_34_to_36.csv'
-data_2.to_csv(mkdir+name_8)
+data_2.to_csv(mkdir+dir_+name_8)
 
 finaly['34'] = final.loc['34', 'result']
 finaly['35'] = final.loc['35', 'result']
@@ -331,7 +325,7 @@ finaly['36'] = final.loc['36', 'result']
 finaly['37'] = 1
 
 name_9 = '_final_result.csv'
-finaly.to_csv(mkdir+name_9)
+finaly.to_csv(mkdir+dir_+name_9)
 
 print('Done\nFile has been saved to:', mkdir)
 
