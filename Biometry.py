@@ -44,7 +44,7 @@ console_picture()
 finaly = pd.DataFrame(columns = [str(i) for i in range(1, 38)])
 
 print('Файл должен быть скачан в формате .csv')
-print(r'Введите путь к файлу (в формате C:\user\...\file.csv)')
+print(r'Введите путь к файлу (в формате /home/user/directory/file.csv)')
 path = input(r"Путь: ")
 data = pd.read_csv(path, sep=";")
 df = pd.DataFrame(columns = ['Height', 'Weight'])
@@ -53,7 +53,7 @@ df.loc['mean'] = data[['Height', 'Weight']].mean()
 df.loc['median'] = data[['Height', 'Weight']].median()
 df.loc['quantile_25'] = data[['Height', 'Weight']].quantile(0.25)
 df.loc['quantile_75'] = data[['Height', 'Weight']].quantile(0.75)
-print(r'Введите путь к директории, в которую сохранить данные (в формате C:\user\...\directory\).')
+print(r'Введите путь к директории, в которую сохранить данные (в формате /home/user/directory).')
 final = input(r'Путь: ')
 dir_ = "/" + path.split("/")[-1].split('_')[0]
 mkdir = final + dir_
@@ -313,9 +313,10 @@ import pingouin as pg
 final = pd.DataFrame(columns = ['result'])
 last = last.rename(columns={"Physical activity": "PA"})
 anv = pg.anova(dv='BMI', between=['LDDD', 'PA'], data=last, detailed=True)
-final.loc['34'] = round(anv[anv["Source"] == "LDDD"]["p-unc"].values[0], 3)
-final.loc['35'] = round(anv[anv["Source"] == "PA"]["p-unc"].values[0], 3)
-final.loc['36'] = 1
+anv.to_csv(mkdir+dir_+"_anv.csv")
+final.loc['34'] = round(anv[anv["Source"] == "LDDD"]["p-unc"].values[0], 2)
+final.loc['35'] = round(anv[anv["Source"] == "PA"]["p-unc"].values[0], 2)
+final.loc['36'] = round(anv[anv["Source"] == "LDDD * PA"]["SS"].values[0], 2)
 name_8 = '_34_to_36.csv'
 data_2.to_csv(mkdir+dir_+name_8)
 
