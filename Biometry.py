@@ -57,11 +57,9 @@ print(r'Введите путь к директории, в которую со�
 final = input(r'Путь: ')
 dir_ = "/" + path.split("/")[-1].split('_')[0]
 mkdir = final + dir_
-print(mkdir)
 os.mkdir(mkdir)
 #mkdir += '/'
 name = '_result_2_to_11.csv'
-print('Running', mkdir+dir_+name)
 df.to_csv(mkdir+dir_+name)
 
 finaly.loc[0, '1'] = 1
