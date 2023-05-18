@@ -3,6 +3,8 @@ os.system('pip install numpy pandas datetime scipy sklearn colorama sklearn ping
 import pandas as pd
 import scipy
 from scipy import stats
+import statsmodels.api as sm
+from statsmodels.formula.api import ols
 from colorama import init, Fore, Back, Style
 
 init()
@@ -46,7 +48,7 @@ finaly = pd.DataFrame(columns = [str(i) for i in range(1, 38)])
 print('Файл должен быть скачан в формате .csv')
 print(r'Введите путь к файлу (в формате /home/user/directory/file.csv)')
 path = input(r"Путь: ")
-data = pd.read_csv(path, sep=";")
+data = pd.read_csv(path, sep=",")
 df = pd.DataFrame(columns = ['Height', 'Weight'])
 df.loc['var'] = data[['Height', 'Weight']].var()
 df.loc['mean'] = data[['Height', 'Weight']].mean()
@@ -56,7 +58,7 @@ df.loc['quantile_75'] = data[['Height', 'Weight']].quantile(0.75)
 print(r'Введите путь к директории, в которую сохранить данные (в формате /home/user/directory).')
 final = input(r'Путь: ')
 dir_ = "/" + path.split("/")[-1].split('_')[0]
-mkdir = final + dir_
+mkdir = final + dir_ # Yakovlev_T_M_-_Yakovlev_T_M.csv
 os.mkdir(mkdir)
 #mkdir += '/'
 name = '_result_2_to_11.csv'
@@ -305,16 +307,16 @@ data_2.to_csv(mkdir+dir_+name_7)
 finaly['32'] = round(data_2.loc['32', 'result'], 3)
 finaly['33'] = round(data_2.loc['33', 'result'], 3)
 
-import pandas as pd
-import pingouin as pg
+# import pandas as pde
 
 final = pd.DataFrame(columns = ['result'])
 last = last.rename(columns={"Physical activity": "PA"})
-anv = pg.anova(dv='BMI', between=['LDDD', 'PA'], data=last, detailed=True)
-anv.to_csv(mkdir+dir_+"_anv.csv")
-final.loc['34'] = round(anv[anv["Source"] == "LDDD"]["p-unc"].values[0], 2)
-final.loc['35'] = round(anv[anv["Source"] == "PA"]["p-unc"].values[0], 2)
-final.loc['36'] = round(anv[anv["Source"] == "LDDD * PA"]["SS"].values[0], 2)
+model = ols('BMI ~ LDDD + PA + LDDD*PA', data=last).fit()
+result = sm.stats.anova_lm(model, typ=2)
+result.to_csv(mkdir+dir_+"_anv.csv")
+final.loc['34'] = round(result.loc['LDDD']['PR(>F)'], 2)
+final.loc['35'] = round(result.loc['PA']['PR(>F)'], 2) # LDDD:PA
+final.loc['36'] = round(result.loc['LDDD:PA']['PR(>F)'], 2)
 name_8 = '_34_to_36.csv'
 data_2.to_csv(mkdir+dir_+name_8)
 
