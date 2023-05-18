@@ -1,12 +1,10 @@
 import os
-os.system('pip install numpy pandas datetime scipy sklearn colorama sklearn')
-import numpy as np
+os.system('pip install numpy pandas datetime scipy sklearn colorama sklearn pingouin')
 import pandas as pd
-import math
-import datetime
 import scipy
 from scipy import stats
-import sklearn
+import statsmodels.api as sm
+from statsmodels.formula.api import ols
 from colorama import init, Fore, Back, Style
 
 init()
@@ -48,23 +46,22 @@ console_picture()
 finaly = pd.DataFrame(columns = [str(i) for i in range(1, 38)])
 
 print('Файл должен быть скачан в формате .csv')
-print(r'Введите путь к файлу (в формате C:\user\...\file.csv)')
+print(r'Введите путь к файлу (в формате /home/user/directory/file.csv)')
 path = input(r"Путь: ")
-data = pd.read_csv(path, sep = ';')
+data = pd.read_csv(path, sep=",")
 df = pd.DataFrame(columns = ['Height', 'Weight'])
 df.loc['var'] = data[['Height', 'Weight']].var()
 df.loc['mean'] = data[['Height', 'Weight']].mean()
 df.loc['median'] = data[['Height', 'Weight']].median()
 df.loc['quantile_25'] = data[['Height', 'Weight']].quantile(0.25)
 df.loc['quantile_75'] = data[['Height', 'Weight']].quantile(0.75)
-print(r'Введите путь к директории, в которую сохранить данные (в формате C:\user\...\directory\).')
+print(r'Введите путь к директории, в которую сохранить данные (в формате /home/user/directory).')
 final = input(r'Путь: ')
-dir_ = path.split("\\")[-1].split('_')[0]
-mkdir = final + dir_
+dir_ = "/" + path.split("/")[-1].split('_')[0]
+mkdir = final + dir_ # Yakovlev_T_M_-_Yakovlev_T_M.csv
 os.mkdir(mkdir)
-mkdir += '\\'
+#mkdir += '/'
 name = '_result_2_to_11.csv'
-print('Running')
 df.to_csv(mkdir+dir_+name)
 
 finaly.loc[0, '1'] = 1
@@ -100,6 +97,8 @@ dat[dat['Height'] < lower['Height']] = None
 dat[dat['Weight'] > upper['Weight']] = None
 dat[dat['Weight'] < lower['Weight']] = None
 dat['BMI'] = dat['Weight'] / (dat['Height']*0.01)**2
+last = dat[dat["Subsample"] == 1]
+last = last[["BMI", "LDDD", "Physical activity"]]
 q25_bmi = dat[['BMI']].quantile(0.25)
 q75_bmi = dat[['BMI']].quantile(0.75)
 IQR_bmi = q75_bmi - q25_bmi
@@ -212,21 +211,21 @@ da = pd.DataFrame(columns = ['p_value'])
 
 dat = data.copy()
 
-real_2002 = {
-    'Armenian': 0.78,# 
-    'Bashkir': 1.15, #
-    'Tatar': 3.83, #
-    'Ukrainian': 2.03,#
-    'German': 0.41, #
-    'Chuvash': 1.13,#
-    'Chechen': 0.94,#
-    'Kazakh': 0.45,#
-    'Yakut': 0.31,#
-    'Russian': 79.83,#
-    'Buryat': 0.31,#
-    'Uzbek': 0.09,#
-       }
-dft = pd.DataFrame(real_2002.items())
+real_2010 = {
+    'Armenian': 0.84,#
+    'Bashkir': 1.26,#
+    'Tatar': 4.21,#
+    'Ukrainian': 1.53,#
+    'German': 0.32,#
+    'Chuvash': 1.15,#
+    'Chechen': 1.13,#
+    'Kazakh': 0.51,#
+    'Yakut': 0.38,#
+    'Russian': 87.97,#
+    'Buryat': 0.36,#
+    'Uzbek': 0.24,#
+}
+dft = pd.DataFrame(real_2010.items())
 dft = dft.rename(columns = {0: '', 1: 'Ethnicity_1'})
 dft = dft.set_index('')
 a = pd.concat([dft, dat['Ethnicity'].value_counts()], axis=1)
@@ -236,54 +235,55 @@ a['Ethnicity_1'] = a['Ethnicity_1']/100
 b = pd.DataFrame(a.Ethnicity_1 * dat['Ethnicity'].value_counts().sum())
 c = pd.DataFrame(dat['Ethnicity'].value_counts())
 red = pd.concat([b, c], axis=1).fillna(0)
-nexp_2002 = (red.Ethnicity-red.Ethnicity_1)**2/red.Ethnicity_1
-p_2002 = scipy.stats.chi2.sf(nexp_2002.sum(), 11)
-
-real_2010 = {
-    'Armenian': 0.83,#
-    'Bashkir': 1.11,#
-    'Tatar': 3.72,#
-    'Ukrainian': 1.35,#
-    'German': 0.28,#
-    'Chuvash': 1.01,#
-    'Chechen': 1.,#
-    'Kazakh': 0.45,#
-    'Yakut': 0.34,#
-    'Russian': 77.71,#
-    'Buryat': 0.32,#
-    'Uzbek': 0.2,#
-}
-dft_2010 = pd.DataFrame(real_2010.items())
-dft_2010 = dft_2010.rename(columns = {0: '', 1: 'Ethnicity_1'})
-dft_2010 = dft_2010.set_index('')
-a_2010 = pd.concat([dft_2010, dat['Ethnicity'].value_counts()], axis=1)
-a_2010['Ethnicity'] = (100. * a_2010.Ethnicity / a_2010.Ethnicity.sum())
-a_2010['Ethnicity'] = a_2010['Ethnicity']/100
-a_2010['Ethnicity_1'] = a_2010['Ethnicity_1']/100
-b_2010 = pd.DataFrame(a_2010.Ethnicity_1 * dat['Ethnicity'].value_counts().sum())
-c_2010 = pd.DataFrame(dat['Ethnicity'].value_counts())
-red = pd.concat([b_2010, c_2010], axis=1).fillna(0)
 nexp_2010 = (red.Ethnicity-red.Ethnicity_1)**2/red.Ethnicity_1
 p_2010 = scipy.stats.chi2.sf(nexp_2010.sum(), 11)
 
+real_2021 = {
+    'Armenian': 0.81,#
+    'Bashkir': 1.35,#
+    'Tatar': 3.97,#
+    'Ukrainian': 0.74,#
+    'German': 0.18,#
+    'Chuvash': 0.91,#
+    'Chechen': 1.44,#
+    'Kazakh': 0.55,#
+    'Yakut': 0.43,#
+    'Russian': 88.97,#
+    'Buryat': 0.38,#
+    'Uzbek': 0.27,#
+}
+dft_2021 = pd.DataFrame(real_2021.items())
+dft_2021 = dft_2021.rename(columns = {0: '', 1: 'Ethnicity_1'})
+dft_2021 = dft_2021.set_index('')
+a_2021 = pd.concat([dft_2021, dat['Ethnicity'].value_counts()], axis=1)
+a_2021['Ethnicity'] = (100. * a_2021.Ethnicity / a_2021.Ethnicity.sum())
+a_2021['Ethnicity'] = a_2021['Ethnicity']/100
+a_2021['Ethnicity_1'] = a_2021['Ethnicity_1']/100
+b_2021 = pd.DataFrame(a_2021.Ethnicity_1 * dat['Ethnicity'].value_counts().sum())
+c_2021 = pd.DataFrame(dat['Ethnicity'].value_counts())
+red = pd.concat([b_2021, c_2021], axis=1).fillna(0)
+nexp_2021 = (red.Ethnicity-red.Ethnicity_1)**2/red.Ethnicity_1
+p_2021 = scipy.stats.chi2.sf(nexp_2021.sum(), 11)
+
 dag = pd.DataFrame(data['Maximum degree of disk degeneration in lumbar spine'].value_counts())
 reg = pd.DataFrame(columns = ['our', 'juornal'])
-reg.loc[2] = [dag.loc[2, 'Maximum degree of disk degeneration in lumbar spine'] / dag.sum()][0][0], 0.066
-reg.loc[3] = [dag.loc[3, 'Maximum degree of disk degeneration in lumbar spine'] / dag.sum()][0][0], 0.528
-reg.loc[4] = [dag.loc[4, 'Maximum degree of disk degeneration in lumbar spine'] / dag.sum()][0][0], 0.34
-reg.loc[5] = [dag.loc[5, 'Maximum degree of disk degeneration in lumbar spine'] / dag.sum()][0][0], 0.066
+reg.loc[1] = [dag.loc[1, 'Maximum degree of disk degeneration in lumbar spine'] / dag.sum()][0][0], 0.0094
+reg.loc[2] = [dag.loc[2, 'Maximum degree of disk degeneration in lumbar spine'] / dag.sum()][0][0], 0.0654
+reg.loc[3] = [dag.loc[3, 'Maximum degree of disk degeneration in lumbar spine'] / dag.sum()][0][0], 0.5234
+reg.loc[4] = [dag.loc[4, 'Maximum degree of disk degeneration in lumbar spine'] / dag.sum()][0][0], 0.3364
+reg.loc[5] = [dag.loc[5, 'Maximum degree of disk degeneration in lumbar spine'] / dag.sum()][0][0], 0.0654
 nexp_MDD = dag['Maximum degree of disk degeneration in lumbar spine'].sum() * (reg.our-reg.juornal)**2/reg.juornal
 p_MDD = scipy.stats.chi2.sf(nexp_MDD.sum(), 3)
 
-da.loc['p_value_2002_№29'] = p_2002
-da.loc['p_value_2010_№30'] = p_2010
+da.loc['p_value_2010_№29'] = p_2010
+da.loc['p_value_2021_№30'] = p_2021
 da.loc['MaxDegrDisk_№31'] = p_MDD
 
 name_6 = '_29_to_31.csv'
 da.to_csv(mkdir+dir_+name_6)
 
-finaly['29'] = round(da.loc['p_value_2002_№29', 'p_value'], 3)
-finaly['30'] = round(da.loc['p_value_2010_№30', 'p_value'], 3)
+finaly['29'] = round(da.loc['p_value_2010_№29', 'p_value'], 3)
+finaly['30'] = round(da.loc['p_value_2021_№30', 'p_value'], 3)
 finaly['31'] = round(da.loc['MaxDegrDisk_№31', 'p_value'], 3)
 
 from sklearn import preprocessing
@@ -307,11 +307,16 @@ data_2.to_csv(mkdir+dir_+name_7)
 finaly['32'] = round(data_2.loc['32', 'result'], 3)
 finaly['33'] = round(data_2.loc['33', 'result'], 3)
 
-import pandas as pd
+# import pandas as pde
+
 final = pd.DataFrame(columns = ['result'])
-final.loc['34'] = 1
-final.loc['35'] = 1
-final.loc['36'] = 1
+last = last.rename(columns={"Physical activity": "PA"})
+model = ols('BMI ~ LDDD + PA + LDDD*PA', data=last).fit()
+result = sm.stats.anova_lm(model, typ=2)
+result.to_csv(mkdir+dir_+"_anv.csv")
+final.loc['34'] = round(result.loc['LDDD']['PR(>F)'], 2)
+final.loc['35'] = round(result.loc['PA']['PR(>F)'], 2) # LDDD:PA
+final.loc['36'] = round(result.loc['LDDD:PA']['PR(>F)'], 2)
 name_8 = '_34_to_36.csv'
 data_2.to_csv(mkdir+dir_+name_8)
 
