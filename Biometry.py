@@ -48,7 +48,7 @@ finaly = pd.DataFrame(columns = [str(i) for i in range(1, 38)])
 print('Файл должен быть скачан в формате .csv')
 print(r'Введите путь к файлу (в формате /home/user/directory/file.csv)')
 path = input(r"Путь: ")
-data = pd.read_csv(path, sep=",")
+data = pd.read_csv(path, sep=";")
 df = pd.DataFrame(columns = ['Height', 'Weight'])
 df.loc['var'] = data[['Height', 'Weight']].var()
 df.loc['mean'] = data[['Height', 'Weight']].mean()
@@ -307,7 +307,9 @@ data_2.to_csv(mkdir+dir_+name_7)
 finaly['32'] = round(data_2.loc['32', 'result'], 3)
 finaly['33'] = round(data_2.loc['33', 'result'], 3)
 
-# import pandas as pde
+def res_36(aov):
+    sm = aov.loc['PA']['sum_sq'] + aov.loc['LDDD']['sum_sq'] + aov.loc['LDDD:PA']['sum_sq']
+    return round(sm / (aov.loc['Residual']['sum_sq'] + sm), 2)
 
 final = pd.DataFrame(columns = ['result'])
 last = last.rename(columns={"Physical activity": "PA"})
@@ -316,7 +318,7 @@ result = sm.stats.anova_lm(model, typ=2)
 result.to_csv(mkdir+dir_+"_anv.csv")
 final.loc['34'] = round(result.loc['LDDD']['PR(>F)'], 2)
 final.loc['35'] = round(result.loc['PA']['PR(>F)'], 2) # LDDD:PA
-final.loc['36'] = round(result.loc['LDDD:PA']['PR(>F)'], 2)
+final.loc['36'] = res_36(result)
 name_8 = '_34_to_36.csv'
 data_2.to_csv(mkdir+dir_+name_8)
 
