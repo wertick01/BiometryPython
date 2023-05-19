@@ -316,8 +316,8 @@ last = last.rename(columns={"Physical activity": "PA"})
 model = ols('BMI ~ LDDD + PA + LDDD*PA', data=last).fit()
 result = sm.stats.anova_lm(model, typ=2)
 result.to_csv(mkdir+dir_+"_anv.csv")
-final.loc['34'] = round(result.loc['LDDD']['PR(>F)'], 2)
-final.loc['35'] = round(result.loc['PA']['PR(>F)'], 2) # LDDD:PA
+final.loc['34'] = round(result.loc['LDDD']['PR(>F)'], 3)
+final.loc['35'] = round(result.loc['PA']['PR(>F)'], 3) # LDDD:PA
 final.loc['36'] = res_36(result)
 name_8 = '_34_to_36.csv'
 data_2.to_csv(mkdir+dir_+name_8)
