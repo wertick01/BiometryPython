@@ -273,7 +273,7 @@ reg.loc[3] = [dag.loc[3, 'Maximum degree of disk degeneration in lumbar spine'] 
 reg.loc[4] = [dag.loc[4, 'Maximum degree of disk degeneration in lumbar spine'] / dag.sum()][0][0], 0.3364
 reg.loc[5] = [dag.loc[5, 'Maximum degree of disk degeneration in lumbar spine'] / dag.sum()][0][0], 0.0654
 nexp_MDD = dag['Maximum degree of disk degeneration in lumbar spine'].sum() * (reg.our-reg.juornal)**2/reg.juornal
-p_MDD = scipy.stats.chi2.sf(nexp_MDD.sum(), 3)
+p_MDD = scipy.stats.chi2.sf(nexp_MDD.sum(), 11)
 
 da.loc['p_value_2010_№29'] = p_2010
 da.loc['p_value_2021_№30'] = p_2021
