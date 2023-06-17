@@ -6,7 +6,7 @@ from tkinter import filedialog
 from tkinter import ttk
 
 class Run(object):
-    def __init__(self, inputFilePath, outputDirPath, sep):
+    def __init__(self, inputFilePath, outputDirPath, sep=";"):
         self.reader = Reader(path=inputFilePath, sep=sep)
         self.name = self.reader.getName()
         self.reader.read()
@@ -16,7 +16,7 @@ class Run(object):
 
         self.counter = Counter(self.reader.DataFrame)
 
-        self.saver = Saver(path=outputDirPath, sep=";", format=self.reader.format)
+        self.saver = Saver(path=outputDirPath, sep=sep, format=self.reader.format)
         self.saver.parseFileName(name=self.name)
         self.saver.makeDir(self.saver.dir)
 
@@ -46,19 +46,23 @@ class Run(object):
 
 
 # функция для считывания исходного файла
-def open_file():
+def openFile():
     return filedialog.askopenfilename()
 
 # функция для выбора места сохранения файла с ответом
-def save_file():
+def saveFile():
     return filedialog.askdirectory()
 
-# функция для вызова скрипта
-def run_script():
-    inputFilePath = open_file()
-    outputDirPath = save_file()
+def selectSeparator():
+    return combo.get()
 
-    run = Run(inputFilePath=inputFilePath, outputDirPath=outputDirPath, sep=";")
+# функция для вызова скрипта
+def runScript():
+    inputFilePath = openFile()
+    outputDirPath = saveFile()
+    separator = selectSeparator()
+
+    run = Run(inputFilePath=inputFilePath, outputDirPath=outputDirPath, sep=separator)
     run.getAllResults()
 
     run.saveFiles()
@@ -66,9 +70,24 @@ def run_script():
 
 if __name__ == "__main__":
     root = tk.Tk()
+    root.title("Biometry.py")
 
-    label_style = ttk.Style(root)
-    label_style.configure(
+    parameterLabel = tk.Label(root, text="Enter the separator value:")
+    parameterLabel.pack(side=tk.LEFT)
+
+    # меню для выбора параметра
+    selectedSeparator = tk.StringVar(name="sep")
+    options = [";", ",", "Another separator"]
+    combo = ttk.Combobox(root, textvariable=selectedSeparator, values=options, name="sep")
+    combo.pack(side=tk.LEFT)
+
+    # # поле для ввода пользовательского параметра
+    # entry = tk.Entry(root)
+    # entry.pack(side=tk.TOP)
+
+
+    labelStyle = ttk.Style(root)
+    labelStyle.configure(
         ".",          
         font="helvetica 14",   
         foreground="#004D40",   
@@ -77,9 +96,9 @@ if __name__ == "__main__":
     )
 
     # кнопки для запуска программы и выбора файлов
-    run_button = tk.Button(root, text="Run Script", command=run_script)
+    run_button = tk.Button(root, text="Run Script", command=runScript)
 
     # размещение кнопок на экране
-    run_button.pack(side=tk.LEFT)
+    run_button.pack(side=tk.RIGHT)
 
     root.mainloop()
