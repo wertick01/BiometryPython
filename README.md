@@ -2,7 +2,7 @@
 
 Download data in **.csv** or **.xlsx** formats
 
-Download and install **Biometry.py** (using Git or download an archive):
+Download and install **BiometryPython** (using Git or download an archive):
 
 ```bash
 git clone https://github.com/wertick01/BiometryPython.git
