@@ -1,10 +1,21 @@
 import pandas as pd
 
 class Reader(object):
+
     def __init__(self, path, sep):
         self.path = path
         self.sep = sep
         self.format = path.split(".")[-1:][0]
+
+    def getName(self):
+        prefix = ""
+        if "/" in self.path:
+            prefix = "/"
+        if "\\" in self.path:
+            prefix = "\\"
+
+        lastPart = self.path.split(prefix)[-1:][0]
+        return lastPart.split(".")[0]
 
     def read(self):
         self.error = None
@@ -24,5 +35,3 @@ class Reader(object):
             self.error = "Parse error"
         except Exception:
             self.error = "Some other exception"
-
-        # return self.DataFrame, self.error

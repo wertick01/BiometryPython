@@ -19,6 +19,8 @@ class Counter(object):
         self.from29To31DF = pd.DataFrame(columns=["Chi^2"])
         self.from32To33DF = pd.DataFrame(columns=["Mann-Uitney"])
         self.from34To36DF = pd.DataFrame(columns=["ANOVA"])
+        self.finalLine = pd.DataFrame(columns=[str(i) for i in range(1, 38)])
+        # self.finalLine = pd.DataFrame(columns=["result"])
 
         self.real2010 = {
             "Armenian": 0.84,#
@@ -183,4 +185,45 @@ class Counter(object):
 
         sm = anovaResult.loc["PA"]["sum_sq"] + anovaResult.loc["LDDD"]["sum_sq"] + anovaResult.loc["LDDD:PA"]["sum_sq"]
         self.from34To36DF.loc["Proportion of the explained variance"] = sm / (anovaResult.loc["Residual"]["sum_sq"] + sm)
+
+    def formatToFinalLine(self, name):
+        self.finalLine.loc[name] = [
+            1,
+            round(self.from1To11DF.loc['var', 'Height'], 2),
+            round(self.from1To11DF.loc['mean', 'Height'], 2),
+            round(self.from1To11DF.loc['median', 'Height'], 2),
+            round(self.from1To11DF.loc['quantile_25', 'Height'], 2),
+            round(self.from1To11DF.loc['quantile_75', 'Height'], 2),
+            round(self.from1To11DF.loc['var', 'Weight'], 2),
+            round(self.from1To11DF.loc['mean', 'Weight'], 2),
+            round(self.from1To11DF.loc['median', 'Weight'], 2),
+            round(self.from1To11DF.loc['quantile_25', 'Weight'], 2),
+            round(self.from1To11DF.loc['quantile_75', 'Weight'], 2),
+            1,
+            round(self.from12To18DF.loc[0, 'Height'], 2),
+            round(self.from12To18DF.loc[1, 'Height'], 2),
+            round(self.from12To18DF.loc[2, 'Height'], 2),
+            round(self.from12To18DF.loc[0, 'BMI'], 2),
+            round(self.from12To18DF.loc[1, 'BMI'], 2),
+            round(self.from12To18DF.loc[2, 'BMI'], 2),
+            round(self.from19To20DF.loc['correlation', 'results'], 2),
+            round(self.from19To20DF.loc['p-value', 'results'], 2),
+            1,
+            round(self.spearman.loc["22", 'Spearman'], 2),
+            round(self.from23To26DF.loc["regression-coefficient", 'results'], 2),
+            round(self.from23To26DF.loc["free-coefficient", 'results'], 2),
+            round(self.from23To26DF.loc["det-coefficient", 'results'], 2),
+            round(self.from23To26DF.loc["p-value", 'results'], 3),
+            round(self.from27To28DF.loc["BMI", 'T-Test'], 3),
+            round(self.from27To28DF.loc["Body fat mass", 'T-Test'], 3),
+            round(self.from29To31DF.loc["2010 Ethnicity statistics", 'Chi^2'], 3),
+            round(self.from29To31DF.loc["2021 Ethnicity statistics", 'Chi^2'], 3),
+            round(self.from29To31DF.loc["Maximum degree of disk degeneration in lumbar spine", 'Chi^2'], 3),
+            round(self.from32To33DF.loc["Sex / Physical activity", 'Mann-Uitney'], 3),
+            round(self.from32To33DF.loc["Sex / Maximum degree of disk degeneration in lumbar spine", 'Mann-Uitney'], 3),
+            round(self.from34To36DF.loc["LDDD (P-value)", 'ANOVA'], 2),
+            round(self.from34To36DF.loc["PA (P-value)", 'ANOVA'], 2),
+            round(self.from34To36DF.loc["Proportion of the explained variance", 'ANOVA'], 2),
+            1,
+        ]
         
