@@ -3,13 +3,16 @@
 Download data in **.csv** or **.xlsx** formats
 
 Download and install **BiometryPython** (using Git or download an archive):
-
 ```bash
 git clone https://github.com/wertick01/BiometryPython.git
 ```
 
-Then write to the command line:
+Install the requirements:
+```bash
+pip install -m requirements.txt
+```
 
+Then write to the command line:
 ```bash
 python C:\PATH\TO\BiometryPython\run.py 
 ```
