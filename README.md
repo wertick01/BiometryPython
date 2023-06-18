@@ -9,7 +9,7 @@ git clone https://github.com/wertick01/BiometryPython.git
 
 Install the requirements:
 ```bash
-pip install -m requirements.txt
+pip install -r requirements.txt
 ```
 
 Then write to the command line:
