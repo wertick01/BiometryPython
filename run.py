@@ -47,7 +47,7 @@ class Run(object):
 
 # функция для считывания исходного файла
 def openFile():
-    return filedialog.askopenfilename()
+    return filedialog.askopenfilename(filetypes=[("csv files", "*.csv"), ("Excel files", "*.xlsx*"), ("Excel files", "*.xls*")])
 
 # функция для выбора места сохранения файла с ответом
 def saveFile():
@@ -77,14 +77,9 @@ if __name__ == "__main__":
 
     # меню для выбора параметра
     selectedSeparator = tk.StringVar(name="sep")
-    options = [";", ",", "Another separator"]
+    options = [";", ",", "Write another separator"]
     combo = ttk.Combobox(root, textvariable=selectedSeparator, values=options, name="sep")
     combo.pack(side=tk.LEFT)
-
-    # # поле для ввода пользовательского параметра
-    # entry = tk.Entry(root)
-    # entry.pack(side=tk.TOP)
-
 
     labelStyle = ttk.Style(root)
     labelStyle.configure(
