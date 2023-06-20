@@ -11,13 +11,14 @@ If you using windows, go to **dist/run** repository and run **run.exe** file.
 If you using linux (or windows but you want to run file from the command line) you should to the newt steps.
 Install the requirements:
 ```bash
+cd PATH/TO/BiometryPython
 pip install -r requirements.txt
 ```
 Then write to the command line:
 ```bash
-python PATH/TO/BiometryPython/run.py 
+python run.py 
 ```
 or
 ```bash
-python3 PATH/TO/run.py
+python3 run.py
 ```
