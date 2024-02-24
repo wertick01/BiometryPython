@@ -135,7 +135,7 @@ class Counter(object):
 
     def getStatisticsFrom27To28(self):
         male, female = self.newDataBMI[self.newDataBMI["Sex"] == "Male"], self.newDataBMI[self.newDataBMI["Sex"] == "Female"]
-        self.from27To28DF.loc["BMI"] = float(stats.ttest_ind(male[["BMI"]], female[["BMI"]], nan_policy="omit", equal_var=False).pvalue.data)
+        self.from27To28DF.loc["BMI"] = float(stats.ttest_ind(male[["BMI"]], female[["BMI"]], nan_policy="omit", equal_var=False).pvalue[0])
         self.from27To28DF.loc["Body fat mass"] = float(stats.ttest_ind(male[["Body fat mass"]], female[["Body fat mass"]], nan_policy="omit", equal_var=False).pvalue[0])
 
     def getChi2ByEthnicity(self, realStatisticsDict, degreesOfFreedom=11):
@@ -143,9 +143,10 @@ class Counter(object):
         ethnicityDataFrame = ethnicityDataFrame.rename(columns={0: "", 1: "EthnicityReal"})
         ethnicityDataFrame.set_index("", inplace=True)
         ethnicityDataFrame = pd.concat([ethnicityDataFrame, pd.DataFrame(self.DataFrame["Ethnicity"].value_counts())], axis = 1)
+        ethnicityDataFrame = ethnicityDataFrame.rename(columns={"count": "Ethnicity"})
         ethnicityDataFrame.Ethnicity = ethnicityDataFrame.Ethnicity / ethnicityDataFrame.Ethnicity.sum()
         ethnicityDataFrame.EthnicityReal = ethnicityDataFrame.EthnicityReal / 100
-        res = pd.concat([pd.DataFrame(ethnicityDataFrame.EthnicityReal * self.DataFrame["Ethnicity"].value_counts().sum()), pd.DataFrame(self.DataFrame["Ethnicity"].value_counts())], axis=1).fillna(0)
+        res = pd.concat([pd.DataFrame(ethnicityDataFrame.EthnicityReal * self.DataFrame["Ethnicity"].value_counts().sum()), pd.DataFrame(self.DataFrame["Ethnicity"].value_counts())], axis=1).fillna(0).rename(columns={"count": "Ethnicity"})
         nexp = (res.Ethnicity - res.EthnicityReal)**2 / res.EthnicityReal
         return stats.chi2.sf(nexp.sum(), degreesOfFreedom)
     
@@ -155,12 +156,12 @@ class Counter(object):
 
         mDDD = pd.DataFrame(self.DataFrame["Maximum degree of disk degeneration in lumbar spine"].value_counts())
         mDDDStatistics = pd.DataFrame(columns = ["our", "juornal"])
-        mDDDStatistics.loc[1] = [mDDD.loc[1, "Maximum degree of disk degeneration in lumbar spine"] / mDDD.sum()][0][0], 0.0094
-        mDDDStatistics.loc[2] = [mDDD.loc[2, "Maximum degree of disk degeneration in lumbar spine"] / mDDD.sum()][0][0], 0.0654
-        mDDDStatistics.loc[3] = [mDDD.loc[3, "Maximum degree of disk degeneration in lumbar spine"] / mDDD.sum()][0][0], 0.5234
-        mDDDStatistics.loc[4] = [mDDD.loc[4, "Maximum degree of disk degeneration in lumbar spine"] / mDDD.sum()][0][0], 0.3364
-        mDDDStatistics.loc[5] = [mDDD.loc[5, "Maximum degree of disk degeneration in lumbar spine"] / mDDD.sum()][0][0], 0.0654
-        nexp_MDD = mDDD["Maximum degree of disk degeneration in lumbar spine"].sum() * (mDDDStatistics.our - mDDDStatistics.juornal)**2 / mDDDStatistics.juornal
+        mDDDStatistics.loc[1] = [mDDD.loc[1] / mDDD.sum()][0][0], 0.0094
+        mDDDStatistics.loc[2] = [mDDD.loc[2] / mDDD.sum()][0][0], 0.0654
+        mDDDStatistics.loc[3] = [mDDD.loc[3] / mDDD.sum()][0][0], 0.5234
+        mDDDStatistics.loc[4] = [mDDD.loc[4] / mDDD.sum()][0][0], 0.3364
+        mDDDStatistics.loc[5] = [mDDD.loc[5] / mDDD.sum()][0][0], 0.0654
+        nexp_MDD = mDDD.reset_index()["Maximum degree of disk degeneration in lumbar spine"].sum() * (mDDDStatistics.our - mDDDStatistics.juornal)**2 / mDDDStatistics.juornal
 
         self.from29To31DF.loc["Maximum degree of disk degeneration in lumbar spine"] = stats.chi2.sf(nexp_MDD.sum(), 3)
 
