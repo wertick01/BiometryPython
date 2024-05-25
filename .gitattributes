@@ -1,3 +1,4 @@
 *.dll filter=lfs diff=lfs merge=lfs -text
 dist/run/_internal/mkl_intel_thread.1.dll filter=lfs diff=lfs merge=lfs -text
 dist/run/_internal/torch/lib/torch_cpu.dll filter=lfs diff=lfs merge=lfs -text
+C:/Users/Professional/Downloads/BiometryPython/dist/run/_internal/torch/lib/torch_cpu.dll filter=lfs diff=lfs merge=lfs -text
