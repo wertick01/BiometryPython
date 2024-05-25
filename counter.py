@@ -169,11 +169,13 @@ class Counter(object):
         self.from32To33DF.loc["Sex / Physical activity"] = stats.mannwhitneyu(
             self.dataWithDigitPA[self.dataWithDigitPA["Sex"] == "Female"]["Physical activity"].values, 
             self.dataWithDigitPA[self.dataWithDigitPA["Sex"] == "Male"]["Physical activity"].values,
+            use_continuity=False
         )[1]
 
         self.from32To33DF.loc["Sex / Maximum degree of disk degeneration in lumbar spine"] = stats.mannwhitneyu(
             self.dataWithDigitPA[self.dataWithDigitPA["Sex"] == "Female"]["Maximum degree of disk degeneration in lumbar spine"].values, 
-            self.dataWithDigitPA[self.dataWithDigitPA["Sex"] == "Male"]["Maximum degree of disk degeneration in lumbar spine"].values
+            self.dataWithDigitPA[self.dataWithDigitPA["Sex"] == "Male"]["Maximum degree of disk degeneration in lumbar spine"].values,
+            use_continuity=False
         )[1]
 
     def getStatisticsFrom34To36(self):
